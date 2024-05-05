@@ -6,6 +6,7 @@ import { Loader } from "./Loader/Loader"
 import { Searchbar } from "./Searchbar/Searchbar";
 import { Modal } from "./Modal/Modal";
 import css from "./App.module.css";
+import { useToggle } from '../hooks/useToggle';
 
 
 const apiEndpoint = 'https://pixabay.com/api/?key=42651602-8bf55650de46c7437c76ae15b'
@@ -16,9 +17,11 @@ export const App = () => {
   const [error, setError] = useState('')
   const [currentPage, setCurrentPage] = useState(0)
   const [searchPhoto, setSearchPhoto] = useState('')
-  const [clicked, setClicked] = useState(false)
+  // const [clicked, setClicked] = useState(false)
   const [alt, setAlt] = useState()
-  const [ src, setSrc ] = useState()
+  const [src, setSrc] = useState()
+  const [id, setId] = useState('')
+  const { isOpen, open, close } = useToggle()
 
   useEffect(() => {
     setCurrentPage(1);
@@ -54,16 +57,18 @@ export const App = () => {
   }
 
   const handleOpen = event => {
-    setClicked(true);
-    const alt = event.target.alt;
+    open();
+    const alt = event.target.tags;
     const src = event.target.getAttribute('srcSet');
+    const imageId = event.target.id;
     setAlt(alt);
     setSrc(src);
+    setId(imageId);
   };
 
-  const handleClose = event => {
-    setClicked(false)
-  }
+  // const handleClose = event => {
+  //   setClicked(false)
+  // }
 
   const getInitialData = async () => {
     try {
@@ -80,8 +85,8 @@ export const App = () => {
   return (
     <div className={css.App}>
       <Searchbar handleSubmit={handleSubmit} handleChange={handleChange} />
-      {clicked && (
-        <Modal alt={alt} src={src} handleClose={handleClose} />
+      {isOpen && (
+        <Modal alt={alt} src={src} id={id} handleClose={close} />
       )}
       {error && <p>Something went wrong: {error.message}</p>}
       {isLoading && <Loader />}

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import "./Modal.css"
 
-export const Modal = ({ alt, src, handleClose }) => {
+export const Modal = ({ alt, src, handleClose, id }) => {
   const handleClick = event => {
     event.stopPropagation();
   };
@@ -9,7 +9,7 @@ export const Modal = ({ alt, src, handleClose }) => {
   return (
     <div onClick={handleClose} className="Overlay">
       <div onClick={handleClick} className="Modal">
-        <img src={src} alt={alt} id="modalImage" />
+        <img src={src} alt={alt} id={id} className={"modal-img"} />
       </div>
     </div>
   );
